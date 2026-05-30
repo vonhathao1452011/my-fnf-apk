@@ -1,39 +1,25 @@
-package;
+	#if android
+	public static var androidCustomPath:String = "/storage/emulated/0/PsychEngineMods/";
+	#end
 
-import animateatlas.AtlasFrameMaker;
-import flixel.math.FlxPoint;
-import flixel.graphics.frames.FlxFrame.FlxFrameAngle;
-import openfl.geom.Rectangle;
-import flixel.math.FlxRect;
-import haxe.xml.Access;
-import openfl.system.System;
-import flixel.FlxG;
-import flixel.graphics.frames.FlxAtlasFrames;
-import openfl.utils.AssetType;
-import openfl.utils.Assets as OpenFlAssets;
-import lime.utils.Assets;
-import flixel.FlxSprite;
-#if sys
-import sys.io.File;
-import sys.FileSystem;
-#end
-import flixel.graphics.FlxGraphic;
-import openfl.display.BitmapData;
-import haxe.Json;
+	public static function getModsFolder():String {
+		#if android
+		if (!sys.FileSystem.exists(androidCustomPath)) {
+			try {
+				sys.FileSystem.createDirectory(androidCustomPath);
+			} catch(e:Dynamic) {
+				trace("STORAGE ERROR: Could not create root directory -> " + e);
+			}
+		}
+		return androidCustomPath;
+		#else
+		return "mods/";
+		#end
+	}
 
-import flash.media.Sound;
-
-using StringTools;
-
-class Paths
-{
-	inline public static var SOUND_EXT = #if web "mp3" #else "ogg" #end;
-	inline public static var VIDEO_EXT = "mp4";
-
-	#if MODS_ALLOWED
-	public static var ignoreModFolders:Array<String> = [
-		'characters',
-		'custom_events',
+	public static function mods(key:String = ''):String {
+		return getModsFolder() + key;
+	}
 		'custom_notetypes',
 		'data',
 		'songs',
